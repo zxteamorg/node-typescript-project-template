@@ -1,10 +1,9 @@
 ﻿/* SETUP */
 const path = {
 	dist: ".dist",
-	pub: "pub",
 	src: "src",
 	test: "test",
-	views: "views"
+	package: ".package"
 };
 
 /* IMPLEMENTATION */
@@ -24,6 +23,9 @@ const distPackage = require("./package.json");
 if("devDependencies" in distPackage) { delete distPackage.devDependencies; }
 if("types" in distPackage) { delete distPackage.types; }
 if("scripts" in distPackage) { delete distPackage.scripts; }
+distPackage.scripts = {
+	"start": "node ./lib/main.js"
+}; 
 
 gulp.task("default", function(cb){ return runSequence("clean", "dist", cb); });
 gulp.task("clean", ["clean:src", "clean:test", "clean:dist"]);
@@ -87,35 +89,26 @@ gulp.task("build:test:compile", ["build:test:lint"], function () {
 		}))
 		.pipe(gulp.dest(path.test));
 });
-gulp.task("dist", ["dist:conf", "dist:js", "dist:pub", "dist:views", "dist:deps", "dist:archive"]);
+gulp.task("dist", ["dist:conf", "dist:js", "dist:deps"]);
 gulp.task("dist:js", ["build:src"], function () {
 	return gulp.src(path.src + "/**/*.js")
-		.pipe(gulp.dest(path.dist + "/tmp/lib"))
-});
-gulp.task("dist:pub", function () {
-	return gulp.src(path.pub + "/**/*")
-		.pipe(gulp.dest(path.dist + "/tmp/" + path.pub))
-});
-gulp.task("dist:views", function () {
-	return gulp.src(path.views + "/**/*.html")
-		.pipe(gulp.dest(path.dist + "/tmp/" + path.views))
+		.pipe(gulp.dest(path.dist + "/lib"))
 });
 gulp.task("dist:conf", function () {
 	return gulp.src(".env")
-		.pipe(gulp.dest(path.dist + "/tmp"))
+		.pipe(gulp.dest(path.dist))
 });
 gulp.task("dist:deps", function () {
 	// Ensure directory exists
 	if(!fs.existsSync(path.dist)) { fs.mkdirSync(path.dist); }
-	if(!fs.existsSync(path.dist + "/tmp")) { fs.mkdirSync(path.dist + "/tmp"); }
 	// You can replace following by just copy package.json, but I have already loaded it so let's just save
-	fs.writeFileSync(path.dist + "/tmp/package.json", JSON.stringify(distPackage, null, "\t"));
-	return gulp.src(path.dist + "/tmp/package.json")
+	fs.writeFileSync(path.dist + "/package.json", JSON.stringify(distPackage, null, "\t"));
+	return gulp.src(path.dist + "/package.json")
 		.pipe(install({production: true}));
 });
-gulp.task("dist:archive", ["dist:conf", "dist:js", "dist:pub", "dist:views", "dist:deps"], function() {
-	gulp.src([path.dist + "/tmp/**/*", path.dist + "/tmp/**/.*"])
+gulp.task("package", ["dist"], function() {
+	gulp.src([path.dist + "/**/*", path.dist + "/**/.*"])
 		.pipe(tar(distPackage.name + "-" + distPackage.version + ".tar", {mode: null}))
 		.pipe(gzip())
-		.pipe(gulp.dest(path.dist));
+		.pipe(gulp.dest(path.package));
 });
