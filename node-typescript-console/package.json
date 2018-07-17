@@ -1,0 +1,19 @@
+{
+	"name": "net-zxteam-template",
+	"version": "0.0.0",
+	"description": "ZXTeam's Template",
+	"scripts": {
+		"start": "node ./src/main.js",
+		"build": "zxbuild",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Zgama Serg <serg.zgama@zxteam.net>",
+	"license": "MIT",
+	"devDependencies": {
+		"@zxnode/build": "0.0.12"
+	},
+	"dependencies": {
+		"@zxnode/base": "^5.0.0",
+		"@zxnode/config": "^5.0.0"
+	}
+}

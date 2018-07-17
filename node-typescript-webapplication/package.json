@@ -1,0 +1,32 @@
+{
+	"name": "org-zxteam-webapptemplate",
+	"version": "0.0.0",
+	"description": "ZXTeam's Web Application Project Template",
+	"scripts": {
+		"start": "node ./src/main.js",
+		"build": "zxbuild",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": {
+		"name": "Serg Zgama",
+		"email": "serg.zgama@zxteam.org"
+	},
+	"contributors": [
+		{
+			"name": "Max Anurin",
+			"email": "maxim.anurin@zxteam.org"
+		}
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"@types/express": "^4.16.0",
+		"@types/morgan": "^1.7.35",
+		"@zxnode/build": "0.0.12"
+	},
+	"dependencies": {
+		"@zxnode/base": "^5.0.0",
+		"@zxnode/config": "^5.0.0",
+		"express": "^4.16.3",
+		"morgan": "^1.9.0"
+	}
+}
